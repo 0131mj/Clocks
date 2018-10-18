@@ -6,6 +6,7 @@
 	<style>
 		body{
 			padding: 20px 60px 50px;
+			color:#555;
 		}
 		#box-wrapper{
 			display:flex;
@@ -28,7 +29,10 @@
 			margin:2px;
 		}
 		.box.fill{
-			background-color: #995;
+			background-color: #99B;
+		}
+		.used-count{
+			color: #66C;
 		}
 	</style>
 </head>
@@ -46,13 +50,14 @@
 	</section>
 	<br/>
 	<p id="current-time"></p>
-	<p>Total : 100 years</p>
+	<p>Total : 100 years <span id="current-boxes"></span></p>
 </body>
 <script>
-	const currentTime = document.getElementById('current-time');
-	currentTime.innerHTML = "Today is " + new Date().toISOString().slice(0,10);
 	
 	const boxWrapper = document.getElementById('box-wrapper');
+	const currentTime = document.getElementById('current-time');
+	const currentBoxes = document.getElementById('current-boxes');
+	
 	let boxes = '';
 	
 	const age = 37;
@@ -79,5 +84,9 @@
 	}
 	
 	boxWrapper.innerHTML = getBoxes()
+	currentTime.innerHTML = "Today is " + new Date().toISOString().slice(0,10);
+	currentBoxes.innerHTML = `( <span class="used-count">${filledBoxCount}</span> / ${boxCount} )`;
+	
+	
 </script>
 </html>
