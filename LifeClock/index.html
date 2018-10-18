@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		body{
+			padding: 20px 60px 50px;
+		}
+		#box-wrapper{
+			display:flex;
+			justify-content: flex-start;
+			flex-wrap: wrap;
+			flex-direction: row;
+		}
+		.box-row{
+			display: -webkit-flex;
+			display: -moz-flex;
+			display: -ms-flex;
+			display: -o-flex;
+			display: flex;
+			flex-direction: column;
+		}
+		.box{
+			width:10px;
+			height: 10px;
+			background-color: #EEE;
+			margin:2px;
+		}
+		.box.fill{
+			background-color: #995;
+		}
+	</style>
+</head>
+<body>
+	<h1>Time is Running</h1>
+	<legend>
+		<p id="life-text"></p>
+		<div class="box fill"></div> LifeBox Used (1 week)
+		<br/><br/>
+		<div class="box"></div> LifeBox Remain (1 week)
+		<br/><br/>
+	</legend>
+	<section id="box-wrapper">
+		
+	</section>
+	<br/>
+	<p id="current-time"></p>
+	<p>Total : 100 years</p>
+</body>
+<script>
+	const currentTime = document.getElementById('current-time');
+	currentTime.innerHTML = "Today is " + new Date().toISOString().slice(0,10);
+	
+	const boxWrapper = document.getElementById('box-wrapper');
+	let boxes = '';
+	
+	const age = 37;
+	const weekOfYear = 52;
+	const totalYear = 100;
+	
+	const boxCount = weekOfYear * totalYear;
+	const filledBoxCount = weekOfYear * age;
+		
+	function getBoxes(){
+		
+		const box = "<div class='box'></div>"
+		const filledBox = "<div class='box fill'></div>"
+		let boxes = '';
+		
+		for(let i = 0; i < boxCount ; i ++){
+			if(i < filledBoxCount){
+				boxes += filledBox;
+			}else{
+				boxes += box;
+			}
+		}
+		return boxes;
+	}
+	
+	boxWrapper.innerHTML = getBoxes()
+</script>
+</html>
