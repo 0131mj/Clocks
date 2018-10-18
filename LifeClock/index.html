@@ -2,10 +2,12 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Document</title>
+	<title>TimeBox</title>
 	<style>
+		@import url(https://fonts.googleapis.com/earlyaccess/notosanskr.css);
 		body{
-			padding: 20px 60px 50px;
+			font-family: 'Noto Sans KR', sans-serif;
+			padding: 30px 60px 50px;
 			color:#555;
 		}
 		#box-wrapper{
@@ -31,29 +33,53 @@
 		.box.fill{
 			background-color: #99B;
 		}
+		.box.this-week{
+			background-color: #558;
+		}
 		.used-count{
-			color: #66C;
+			color: #558;
+		}
+		.life-text{
+			display: -webkit-flex;
+			display: -moz-flex;
+			display: -ms-flex;
+			display: -o-flex;
+			display: flex;
+			align-items: center;
+			margin-bottom: 15px;
+		}
+		.life-text .box{
+			margin-right: 10px;
+		}
+		legend{
+			margin: 30px 0;
 		}
 	</style>
 </head>
 <body>
 	<h1>Time is Running</h1>
 	<legend>
-		<p id="life-text"></p>
-		<div class="box fill"></div> LifeBox Used (1 week)
-		<br/><br/>
-		<div class="box"></div> LifeBox Remain (1 week)
-		<br/><br/>
+		<div class="life-text">
+			<div class="box fill"></div> LifeBox Used (1 week)	
+		</div>
+		<div class="life-text">
+			<div class="box"></div> LifeBox Remain (1 week)
+		</div>
+		<div class="life-text">
+			<div class="box this-week"></div> LifeBox Current <span id="current-boxes"></span>
+		</div>
 	</legend>
 	<section id="box-wrapper">
 		
 	</section>
 	<br/>
-	<p id="current-time"></p>
-	<p>Total : 100 years <span id="current-boxes"></span></p>
+	
+	<p>Total Time : 100 years</p>
+	<p>Today : <span id="current-time"></span></p>
+	
 </body>
 <script>
-	
+	{/*TODO : input box*/}
 	const boxWrapper = document.getElementById('box-wrapper');
 	const currentTime = document.getElementById('current-time');
 	const currentBoxes = document.getElementById('current-boxes');
@@ -69,23 +95,23 @@
 		
 	function getBoxes(){
 		
-		const box = "<div class='box'></div>"
-		const filledBox = "<div class='box fill'></div>"
 		let boxes = '';
 		
-		for(let i = 0; i < boxCount ; i ++){
-			if(i < filledBoxCount){
-				boxes += filledBox;
-			}else{
-				boxes += box;
-			}
+		for(let i = 1; i <= boxCount ; i ++){
+			
+			let boxClass = 'box';
+			
+			if(i < filledBoxCount){boxClass += ' fill'}
+			if(i === filledBoxCount){boxClass += ' this-week'}
+			
+			boxes += `<div class="${boxClass}" title="${i}"></div>`;
 		}
 		return boxes;
 	}
 	
 	boxWrapper.innerHTML = getBoxes()
-	currentTime.innerHTML = "Today is " + new Date().toISOString().slice(0,10);
-	currentBoxes.innerHTML = `( <span class="used-count">${filledBoxCount}</span> / ${boxCount} )`;
+	currentTime.innerHTML = new Date().toISOString().slice(0,10);
+	currentBoxes.innerHTML = `( <span class="used-count">${filledBoxCount}</span> / ${boxCount} weeks )`;
 	
 	
 </script>
