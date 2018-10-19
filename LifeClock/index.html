@@ -60,10 +60,10 @@
 	<h1>Time is Running</h1>
 	<legend>
 		<div class="life-text">
-			<div class="box fill"></div> LifeBox Used (1 week)	
+			<div class="box fill"></div> LifeBox Used
 		</div>
 		<div class="life-text">
-			<div class="box"></div> LifeBox Remain (1 week)
+			<div class="box"></div> LifeBox Remain
 		</div>
 		<div class="life-text">
 			<div class="box this-week"></div> LifeBox Current <span id="current-boxes"></span>
@@ -76,6 +76,7 @@
 	
 	<p>Total Time : 100 years</p>
 	<p>Today : <span id="current-time"></span></p>
+	<p>1 week / box</p>
 	
 </body>
 <script>
@@ -111,7 +112,8 @@
 	
 	boxWrapper.innerHTML = getBoxes()
 	currentTime.innerHTML = new Date().toISOString().slice(0,10);
-	currentBoxes.innerHTML = `( <span class="used-count">${filledBoxCount}</span> / ${boxCount} weeks )`;
+	currentBoxes.innerHTML = `( ${filledBoxCount} )`;
+	totalBoxes.innerHTML = `( ${boxCount} )`;
 	
 	
 </script>
