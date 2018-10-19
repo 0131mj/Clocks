@@ -66,7 +66,7 @@
 			<div class="box"></div> LifeBox Remain
 		</div>
 		<div class="life-text">
-			<div class="box this-week"></div> LifeBox Current : <span id="current-boxes">th</span>
+			<div class="box this-week"></div> LifeBox Current <span id="current-boxes"></span>
 		</div>
 	</legend>
 	<section id="box-wrapper">
@@ -112,7 +112,7 @@
 	
 	boxWrapper.innerHTML = getBoxes()
 	currentTime.innerHTML = new Date().toISOString().slice(0,10);
-	currentBoxes.innerHTML = `( ${filledBoxCount} )`;
+	currentBoxes.innerHTML = `: ${filledBoxCount}th`;
 	totalBoxes.innerHTML = `( ${boxCount} )`;
 	
 	
