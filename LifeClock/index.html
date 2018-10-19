@@ -69,24 +69,27 @@
 			<div class="box this-week"></div> LifeBox Current <span id="current-boxes"></span>
 		</div>
 	</legend>
+	<form>
+		<input type="text" name="year" value="1998">
+		<input type="text" name="month" value="1">
+		<input type="text" name="day" value="31">
+		<input type="submit" id="form-submit-btn">
+	</form>
 	<section id="box-wrapper">
-		
 	</section>
 	<br/>
 	
 	<p>Total Time : 100 years</p>
 	<p>Today : <span id="current-time"></span></p>
 	<p> 1 Box / week </p>
-	
+
 </body>
 <script>
 	{/*TODO : input box*/}
 	const boxWrapper = document.getElementById('box-wrapper');
 	const currentTime = document.getElementById('current-time');
 	const currentBoxes = document.getElementById('current-boxes');
-	
-	let boxes = '';
-	
+
 	const age = 37;
 	const weekOfYear = 52;
 	const totalYear = 100;
@@ -113,8 +116,13 @@
 	boxWrapper.innerHTML = getBoxes()
 	currentTime.innerHTML = new Date().toISOString().slice(0,10);
 	currentBoxes.innerHTML = `: ${filledBoxCount}th`;
-	totalBoxes.innerHTML = `( ${boxCount} )`;
-	
+
+	document.getElementById('form-submit-btn').addEventListener('click', submitBirthDate());
+
+	function submitBirthDate(e) {
+		e.preventDefault();
+		console.log(e);
+    }
 	
 </script>
 </html>
