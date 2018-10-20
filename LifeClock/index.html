@@ -29,12 +29,14 @@
 			height: 10px;
 			background-color: #EEE;
 			margin:2px;
+			cursor:pointer;
 		}
 		.box.fill{
 			background-color: #99B;
 		}
 		.box.this-week{
 			background-color: #558;
+			/*border-radius: 50%;*/
 		}
 		.used-count{
 			color: #558;
@@ -54,10 +56,38 @@
 		legend{
 			margin: 30px 0;
 		}
+		#birth-day-form{
+			padding: 10px 30px 30px;
+			margin: 10px 0;
+			background-color: #fafafa;
+			border : 1px solid #eee;
+			border-radius: 5px;
+		}
+		input{
+			height:30px;
+			border:1px solid #ddd;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+			border-radius: 5px;
+			padding:2px 5px;
+		}
+		input[type=submit]{
+			cursor: pointer;
+		}
 	</style>
 </head>
 <body>
 	<h1>Time is Running</h1>
+	<form id="birth-day-form">
+		<h3>Birth Date</h3>
+		<p>Input your Birth Date.</p>
+		<input type="number" name="year"  placeholder="0000" minlength="4" maxlength="4"  min="1900" max="2018" required >
+		<input type="number" name="month" placeholder="00" minlength="1" maxlength="2"  min="1" max="12" required >
+		<input type="number" name="date"  placeholder="00" minlength="1" maxlength="2"  min="1" max="31" required >
+		<input type="submit" id="form-submit-btn">
+	</form>
+	<section id="box-wrapper"></section>
 	<legend>
 		<div class="life-text">
 			<div class="box fill"></div> LifeBox Used
@@ -68,20 +98,12 @@
 		<div class="life-text">
 			<div class="box this-week"></div> LifeBox Current <span id="current-boxes"></span>
 		</div>
+		<p>Total Time : 100 years</p>
+		<p>Today : <span id="current-time"></span></p>
+		<p>Birth : <span id="birth-date"></span></p>
+		<p> 1 Box / week </p>
 	</legend>
-	<form>
-		<input type="text" name="year" value="1998">
-		<input type="text" name="month" value="1">
-		<input type="text" name="day" value="31">
-		<input type="submit" id="form-submit-btn">
-	</form>
-	<section id="box-wrapper">
-	</section>
 	<br/>
-	
-	<p>Total Time : 100 years</p>
-	<p>Today : <span id="current-time"></span></p>
-	<p> 1 Box / week </p>
 
 </body>
 <script>
@@ -97,7 +119,7 @@
 	const boxCount = weekOfYear * totalYear;
 	const filledBoxCount = weekOfYear * age;
 		
-	function getBoxes(){
+	function getBoxes(boxCount, filledBoxCount){
 		
 		let boxes = '';
 		
@@ -113,16 +135,62 @@
 		return boxes;
 	}
 	
-	boxWrapper.innerHTML = getBoxes()
+	boxWrapper.innerHTML = getBoxes(boxCount, filledBoxCount);
 	currentTime.innerHTML = new Date().toISOString().slice(0,10);
 	currentBoxes.innerHTML = `: ${filledBoxCount}th`;
 
-	document.getElementById('form-submit-btn').addEventListener('click', submitBirthDate());
+	document.getElementById('birth-day-form').addEventListener('submit', submitBirthDate);
+
+	function getNextWeek() {
+
+    }
 
 	function submitBirthDate(e) {
-		e.preventDefault();
-		console.log(e);
+	    e.preventDefault();
+	    const year = this.querySelector('[name=year]').value;
+	    const month = this.querySelector('[name=month]').value;
+	    const date = this.querySelector('[name=date]').value;
+
+	    document.getElementById('birth-date').innerHTML = `${year} - ${month} - ${date}`;
+
+	    const birthDate = new Date(`${year}/${month}/${date}`);
+
+	    const nextWeek = new Date(birthDate.getTime());
+		nextWeek.setDate(nextWeek.getDate()+7);
+
+        const limitDate = new Date(birthDate.getTime());
+        limitDate.setFullYear(limitDate.getFullYear()+100);
+
+        const firstDateOfWeek = 1;
+        const lastDateOfWeek = 1;
+
+		/**
+		 * 요구사항
+		 * 1) birthDate 로 부터 100 년 간의 박스 생성
+		 *
+		 * 7 *
+		 *
+		 * 2) 일주일 시간 가져와서 매 셀에다가 집어넣기
+		 * 	- 2018-01-01 ~ 2018-01-07
+		 * 	- 2018-01-08 ~ 2018-01-15
+		 *
+		 * */
+
+		console.log("birthDate:",birthDate);
+		console.log("nextWeek:", nextWeek);
+		console.log("limitDate:", limitDate);
+
+        for(let i = 1; i <= 3 ; i ++){
+            console.log(`${nextWeek.getFullYear()}- ${nextWeek.getMonth()} - ${nextWeek.getDate()}`)
+            nextWeek.setDate(nextWeek.getDate()+7);
+        }
+
+
+
+		// console.log(e.target)
+		// this.reset();
     }
 	
 </script>
 </html>
+
