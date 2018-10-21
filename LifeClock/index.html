@@ -28,7 +28,7 @@
 			width:10px;
 			height: 10px;
 			background-color: #EEE;
-			margin:2px;
+			margin:1px;
 			cursor:pointer;
 		}
 		.box.fill{
@@ -97,7 +97,7 @@
 		<div class="life-text">
 			<div class="box this-week"></div> LifeBox Current <span id="current-boxes"></span>
 		</div>
-		<p>Total Time : 100 years</p>
+		<!--<p>Total Time : 100 years</p>-->
 		<p>Today : <span id="current-time"></span></p>
 		<p>Birth : <span id="birth-date"></span></p>
 		<p> 1 Box / week </p>
@@ -115,36 +115,17 @@
 
 	const age = 37;
 	const weekOfYear = 52;
-	const totalYear = 100;
+
 	
-	const boxCount = weekOfYear * totalYear;
+
 	const filledBoxCount = weekOfYear * age;
-		
-	function getBoxes(boxCount, filledBoxCount){
-		
-		let boxes = '';
-		
-		for(let i = 1; i <= boxCount ; i ++){
-			
-			let boxClass = 'box';
-			
-			if(i < filledBoxCount){boxClass += ' fill'}
-			if(i === filledBoxCount){boxClass += ' this-week'}
-			
-			boxes += `<div class="${boxClass}" title="${i}"></div>`;
-		}
-		return boxes;
-	}
+
 	
-	boxWrapper.innerHTML = getBoxes(boxCount, filledBoxCount);
+	// boxWrapper.innerHTML = getBoxes(boxCount, filledBoxCount);
 	currentTime.innerHTML = new Date().toISOString().slice(0,10);
 	currentBoxes.innerHTML = `: ${filledBoxCount}th`;
 
 	document.getElementById('birth-day-form').addEventListener('submit', submitBirthDate);
-
-	function getNextWeek() {
-
-    }
 
 	function submitBirthDate(e) {
 	    e.preventDefault();
@@ -152,45 +133,44 @@
 	    const month = this.querySelector('[name=month]').value;
 	    const date = this.querySelector('[name=date]').value;
 
-	    document.getElementById('birth-date').innerHTML = `${year} - ${month} - ${date}`;
+	    document.getElementById('birth-date').innerHTML = `${year}-${month}-${date}`;
 
 	    const birthDate = new Date(`${year}/${month}/${date}`);
+	    const weekDate = new Date(birthDate.getTime());
+		const today = new Date();
 
-	    const nextWeek = new Date(birthDate.getTime());
-		nextWeek.setDate(nextWeek.getDate()+7);
+        console.log("birthDate:",birthDate);
 
-        const limitDate = new Date(birthDate.getTime());
-        limitDate.setFullYear(limitDate.getFullYear()+100);
+        const totalBoxCount = 7000;
 
-        const firstDateOfWeek = 1;
-        const lastDateOfWeek = 1;
+        let boxes = '';
 
-		/**
-		 * 요구사항
-		 * 1) birthDate 로 부터 100 년 간의 박스 생성
-		 *
-		 * 2) 일주일 시간 가져와서 매 셀에다가 집어넣기
-		 * 	- 2018-01-01 ~ 2018-01-07
-		 * 	- 2018-01-08 ~ 2018-01-15
-		 *
-		 * */
+        for(let i = 1; i <= totalBoxCount ; i ++){
+            const startDateOfWeek = new Date(weekDate.getTime());
+            weekDate.setDate(weekDate.getDate()+6);
 
-		console.log("birthDate:",birthDate);
-		console.log("nextWeek:", nextWeek);
-		console.log("limitDate:", limitDate);
+            const endDateOfWeek = new Date(weekDate.getTime());
+            weekDate.setDate(weekDate.getDate()+1);
 
-        for(let i = 1; i <= 3 ; i ++){
-            const startDateOfWeek = `${nextWeek.getFullYear()}-${nextWeek.getMonth()}-${nextWeek.getDate()}`
-            nextWeek.setDate(nextWeek.getDate()+6);
-            const lastDateOfWeek = `${nextWeek.getFullYear()}-${nextWeek.getMonth()}-${nextWeek.getDate()}`
-            nextWeek.setDate(nextWeek.getDate()+1);
-            console.log(`${startDateOfWeek} ~ ${lastDateOfWeek}`);
+            const durationTxt = getDurationFormat(startDateOfWeek, endDateOfWeek);
+
+            let boxClass = 'box';
+            if(startDateOfWeek < today && today < endDateOfWeek){
+                boxClass += ' this-week'
+            } else if(startDateOfWeek < today){
+                boxClass += ' fill'
+            }
+
+            boxes += `<div class="${boxClass}" title="${durationTxt}"></div>`;
         }
 
+        boxWrapper.innerHTML = boxes;
 
+        function getDurationFormat(startDate, endDate) {
+            return  `${startDate.getFullYear()}-${startDate.getMonth()+1}-${startDate.getDate()} `
+                   +`~ ${endDate.getFullYear()}-${endDate.getMonth() + 1}-${endDate.getDate()}`;
+        }
 
-		// console.log(e.target)
-		// this.reset();
     }
 	
 </script>
