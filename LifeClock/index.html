@@ -31,12 +31,24 @@
 			margin:1px;
 			cursor:pointer;
 		}
+		.box:hover{
+			background-color: #DDD;
+		}
 		.box.fill{
 			background-color: #99B;
+		}
+
+		.box.fill:hover{
+			background-color: #558;
 		}
 		.box.this-week{
 			background-color: #558;
 			/*border-radius: 50%;*/
+			animation: blinker 1.5s linear infinite;
+		}
+
+		@keyframes blinker {
+			50% { opacity: 0; }
 		}
 		.used-count{
 			color: #558;
@@ -48,13 +60,15 @@
 			display: -o-flex;
 			display: flex;
 			align-items: center;
-			margin-bottom: 15px;
+			margin-left: 20px;
 		}
 		.life-text .box{
-			margin-right: 10px;
+			margin-right: 5px;
 		}
-		legend{
-			margin: 30px 0;
+		.paradigm{
+			display: none;
+			align-items: center;
+			margin-top: 20px;
 		}
 		#birth-day-form{
 			padding: 10px 30px 30px;
@@ -87,21 +101,27 @@
 		<input type="number" name="date"  placeholder="00" minlength="1" maxlength="2"  min="1" max="31" required >
 		<input type="submit" id="form-submit-btn">
 	</form>
-	<legend>
+	<div class="paradigm">
+		<h4>LifeBox</h4>
 		<div class="life-text">
-			<div class="box fill"></div> LifeBox Used
+			<p>( 1 Box / week )</p>
 		</div>
 		<div class="life-text">
-			<div class="box"></div> LifeBox Remain
+			<div class="box fill"></div> Used
 		</div>
+		<!--<div class="life-text">-->
+			<!--<div class="box this-week"></div> Current-->
+		<!--</div>-->
 		<div class="life-text">
-			<div class="box this-week"></div> LifeBox Current <span id="current-boxes"></span>
+			<div class="box"></div> Remain
 		</div>
+
+
 		<!--<p>Total Time : 100 years</p>-->
-		<p>Today : <span id="current-time"></span></p>
-		<p>Birth : <span id="birth-date"></span></p>
-		<p> 1 Box / week </p>
-	</legend>
+		<!--<p>Today : <span id="current-time"></span></p>-->
+		<!--<p>Birth : <span id="birth-date"></span></p>-->
+
+	</div>
 	<section id="box-wrapper"></section>
 
 	<br/>
@@ -110,20 +130,14 @@
 <script>
 	{/*TODO : input box*/}
 	const boxWrapper = document.getElementById('box-wrapper');
-	const currentTime = document.getElementById('current-time');
-	const currentBoxes = document.getElementById('current-boxes');
+	// const currentTime = document.getElementById('current-time');
 
 	const age = 37;
 	const weekOfYear = 52;
 
-	
-
-	const filledBoxCount = weekOfYear * age;
-
-	
 	// boxWrapper.innerHTML = getBoxes(boxCount, filledBoxCount);
-	currentTime.innerHTML = new Date().toISOString().slice(0,10);
-	currentBoxes.innerHTML = `: ${filledBoxCount}th`;
+	// currentTime.innerHTML = new Date().toISOString().slice(0,10);
+	// currentBoxes.innerHTML = `: ${filledBoxCount}th`;
 
 	document.getElementById('birth-day-form').addEventListener('submit', submitBirthDate);
 
@@ -133,7 +147,7 @@
 	    const month = this.querySelector('[name=month]').value;
 	    const date = this.querySelector('[name=date]').value;
 
-	    document.getElementById('birth-date').innerHTML = `${year}-${month}-${date}`;
+	    // document.getElementById('birth-date').innerHTML = `${year}-${month}-${date}`;
 
 	    const birthDate = new Date(`${year}/${month}/${date}`);
 	    const weekDate = new Date(birthDate.getTime());
@@ -165,6 +179,7 @@
         }
 
         boxWrapper.innerHTML = boxes;
+        document.querySelector('.paradigm').style.display = 'flex';
 
         function getDurationFormat(startDate, endDate) {
             return  `${startDate.getFullYear()}-${startDate.getMonth()+1}-${startDate.getDate()} `
