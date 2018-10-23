@@ -8,10 +8,13 @@
 		@import url(https://fonts.googleapis.com/earlyaccess/notosanskr.css);
 
 		body{
+			position: relative;
 			font-family: 'Noto Sans KR', sans-serif;
 			padding: 30px 60px 50px;
+			margin: 0;
 			color:#555;
 		}
+
 		#box-wrapper{
 			display:flex;
 			justify-content: flex-start;
@@ -92,6 +95,24 @@
 			cursor: pointer;
 			height:40px;
 		}
+
+		.dimmed{
+			position: absolute;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width:100vw;
+			height:100vh;
+			padding:20px;
+			top:0;
+			left:0;
+			background-color:rgba(0,0,0,0.5);
+		}
+		.popup{
+			padding:20px;
+			border-radius: 5px;
+			background-color: #fff;
+		}
 	</style>
 </head>
 <body>
@@ -144,6 +165,12 @@
 
 	document.getElementById('birth-day-form').addEventListener('submit', submitBirthDate);
 
+    function openSchedule(i){
+        console.log(i);
+        const schedule = '<div class="dimmed"><div class="popup schedule">2018-10-08</div></div>';
+        document.querySelector('body').innerHTML += schedule;
+    };
+
 	function submitBirthDate(e) {
 	    e.preventDefault();
 	    const year = this.querySelector('[name=year]').value;
@@ -178,7 +205,7 @@
                 boxClass += ' fill'
             }
 
-            boxes += `<div class="${boxClass}" title="${durationTxt}"></div>`;
+            boxes += `<div class="${boxClass}" title="${durationTxt}" onclick="openSchedule(${i})"></div>`;
         }
 
         boxWrapper.innerHTML = boxes;
@@ -189,8 +216,9 @@
                    +`~ ${endDate.getFullYear()}-${endDate.getMonth() + 1}-${endDate.getDate()}`;
         }
 
+
     }
-	
+
 </script>
 </html>
 
