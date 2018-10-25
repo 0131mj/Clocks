@@ -165,9 +165,21 @@
 
 	document.getElementById('birth-day-form').addEventListener('submit', submitBirthDate);
 
+    function closeSchedule() {
+		const popup = document.getElementsByClassName('dimmed');
+		popup[0].remove();
+    }
+
+
     function openSchedule(i){
         console.log(i);
-        const schedule = '<div class="dimmed"><div class="popup schedule">2018-10-08</div></div>';
+        const schedule = `<div class="dimmed">
+							<div class="popup schedule">
+								${i*7}
+								<button class="close-popup btn" onclick="closeSchedule()">Close</button>
+							</div>
+
+						  </div>`;
         document.querySelector('body').innerHTML += schedule;
     };
 
@@ -185,7 +197,7 @@
 
         console.log("birthDate:",birthDate);
 
-        const totalBoxCount = 7000;
+        const totalBoxCount = 6000;
 
         let boxes = '';
 
