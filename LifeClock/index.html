@@ -52,6 +52,7 @@
 			animation: blinker 1.5s linear infinite;
 		}
 
+
 		@keyframes blinker {
 			50% { opacity: 0; }
 		}
@@ -96,6 +97,7 @@
 			height:40px;
 		}
 
+        /*PopUp*/
 		.dimmed{
 			position: absolute;
 			display: flex;
@@ -111,10 +113,30 @@
 			position: fixed;
 			top:50vh;
 			left:50vw;
-			padding:20px;
+			padding:20px 30px;
 			border-radius: 5px;
 			background-color: #fff;
 		}
+        .duration{
+            margin: 0.8rem 0;
+        }
+        .week-index{
+            color:#888;
+            font-size:0.8rem;
+        }
+        .btn{
+            background-color: #FFF;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            padding: 5px 10px;
+            cursor: pointer;
+            float:right;
+            color:#777;
+        }
+        .btn:hover{
+            background-color: #fafafa;
+            color:#555;
+        }
 	</style>
 </head>
 <body>
@@ -172,18 +194,41 @@
 		popup[0].remove();
     }
 
+    function getOrdinalSuffix(num){
 
-    function openSchedule(i){
-        console.log(i);
-        const schedule = `<div class="dimmed">
+        let suffix = 'th';
+        if (10< num%100 && num%100 <20) return suffix;
+
+        const suffixArr =['th', 'st', 'nd', 'rd'];
+        const leftNum = num%10;
+        if(leftNum<4){suffix = suffixArr[leftNum];}
+        return suffix;
+    }
+
+
+    function openSchedule(e, i){
+        const duration = e.target.title;
+        const ordinalSuffix = getOrdinalSuffix(i+1);
+        const schedule = `<div class="dimmed" onclick="closeSchedule()">
 							<div class="popup schedule">
-								${i*7}
+                                <h4 class="duration">${duration}</h4>
+                                <p class="week-index">${i+1}${ordinalSuffix} week of your Life</p>
+                                <ul>
+                                    <li>Things Done 1</li>
+                                    <li>Things Done 2</li>
+                                    <li>Things Done 3</li>
+                                </ul>
 								<button class="close-popup btn" onclick="closeSchedule()">Close</button>
 							</div>
 
 						  </div>`;
         document.querySelector('body').innerHTML += schedule;
     };
+
+    const totalBoxCount = 6000;
+
+    let boxes = '';
+    let boxesData = [...Array(totalBoxCount)];
 
 	function submitBirthDate(e) {
 	    e.preventDefault();
@@ -197,13 +242,7 @@
 	    const weekDate = new Date(birthDate.getTime());
 		const today = new Date();
 
-        console.log("birthDate:",birthDate);
-
-        const totalBoxCount = 6000;
-
-        let boxes = '';
-
-        for(let i = 1; i <= totalBoxCount ; i ++){
+        boxesData = boxesData.map((box,i) => {
             const startDateOfWeek = new Date(weekDate.getTime());
             weekDate.setDate(weekDate.getDate()+6);
 
@@ -213,21 +252,34 @@
             const durationTxt = getDurationFormat(startDateOfWeek, endDateOfWeek);
 
             let boxClass = 'box';
-            if(startDateOfWeek < today && today < endDateOfWeek){
+            if(startDateOfWeek < today && today <= endDateOfWeek){
                 boxClass += ' this-week'
             } else if(startDateOfWeek < today){
                 boxClass += ' fill'
             }
 
-            boxes += `<div class="${boxClass}" title="${durationTxt}" onclick="openSchedule(${i})"></div>`;
-        }
+            boxes += `<div class="${boxClass}" title="${durationTxt}" onclick="openSchedule(event, ${i})"></div>`;
+
+            const boxData = {
+                startDateOfWeek : startDateOfWeek,
+                endDateOfWeek : endDateOfWeek,
+            }
+
+            return boxData;
+        });
+
 
         boxWrapper.innerHTML = boxes;
         document.querySelector('.paradigm').style.display = 'flex';
+        console.log(boxesData)
 
         function getDurationFormat(startDate, endDate) {
-            return  `${startDate.getFullYear()}-${startDate.getMonth()+1}-${startDate.getDate()} `
-                   +`~ ${endDate.getFullYear()}-${endDate.getMonth() + 1}-${endDate.getDate()}`;
+            let endYear = '';
+            if(startDate.getFullYear() !== endDate.getFullYear()){
+                endYear = endDate.getFullYear() + '/'
+            }
+            return  `${startDate.getFullYear()}/${startDate.getMonth()+1}/${startDate.getDate()} `
+                   +`~ ${endYear}${endDate.getMonth()+1}/${endDate.getDate()}`;
         }
 
 
