@@ -83,19 +83,26 @@
 			border : 1px solid #eee;
 			border-radius: 5px;
 		}
-		input{
-			height:40px;
-			border:1px solid #ddd;
-			-webkit-box-sizing: border-box;
-			-moz-box-sizing: border-box;
-			box-sizing: border-box;
-			border-radius: 5px;
-			padding:2px 10px;
+		.input-area{
+			display: flex;
+			align-items: center;
 		}
-		input[type=submit]{
-			cursor: pointer;
-			height:40px;
-		}
+			input{
+				height:40px;
+				border:1px solid #ddd;
+				-webkit-box-sizing: border-box;
+				-moz-box-sizing: border-box;
+				box-sizing: border-box;
+				border-radius: 5px;
+				padding:2px 10px;
+				margin-right: 5px;
+				text-align: center;
+			}
+			input[type=submit]{
+				cursor: pointer;
+				background-color: #FCFCFC;
+				height:40px;
+			}
 
         /*PopUp*/
 		.dimmed{
@@ -114,26 +121,51 @@
 			border-radius: 5px;
 			background-color: #fff;
 		}
-        .duration{
-            margin: 0.8rem 0;
-        }
-        .week-index{
-            color:#888;
-            font-size:0.8rem;
-        }
+		.popup.schedule header{
+			display: flex;
+			align-items: center;
+			padding:1rem 0;
+			border-bottom : 1px solid #EEE;
+		}
+			.prev,.next{
+				background-color: transparent;
+				cursor: pointer;
+				border: 1px solid #CCC;
+				height: 1.5rem;
+				width: 1.5rem;
+				border-radius: 50%;
+				color:#999;
+			}
+			.prev:hover, .next:hover{
+				color:#555;
+				background-color: #FAFAFA;
+			}
+			.duration{
+				margin: 0 1rem;
+			}
+			.week-index{
+				color:#999;
+				font-size:0.8rem;
+				text-align: center;
+			}
+			header p{
+				margin:0;
+			}
         .btn{
             background-color: #FFF;
             border-radius: 5px;
             border: 1px solid #ddd;
             padding: 5px 10px;
             cursor: pointer;
-            float:right;
             color:#777;
         }
         .btn:hover{
             background-color: #fafafa;
             color:#555;
         }
+		.btn.close-popup{
+			float:right;
+		}
 	</style>
 </head>
 <body>
@@ -141,10 +173,12 @@
 	<form id="birth-day-form">
 		<h3>Birth Date</h3>
 		<p>Input your Birth Date.</p>
-		<input type="number" name="year"  placeholder="0000" minlength="4" maxlength="4"  min="1900" max="2018" required >
-		<input type="number" name="month" placeholder="00" minlength="1" maxlength="2"  min="1" max="12" required >
-		<input type="number" name="date"  placeholder="00" minlength="1" maxlength="2"  min="1" max="31" required >
-		<input type="submit" id="form-submit-btn">
+		<div class="input-area">
+			<input type="number" name="year"  placeholder="0000" minlength="4" maxlength="4"  min="1900" max="2018" required >
+			<input type="number" name="month" placeholder="00" minlength="1" maxlength="2"  min="1" max="12" required >
+			<input type="number" name="date"  placeholder="00" minlength="1" maxlength="2"  min="1" max="31" required >
+			<input type="submit" id="form-submit-btn" class="btn">
+		</div>
 	</form>
 	<div class="paradigm">
 		<h4>LifeBox</h4>
@@ -202,14 +236,29 @@
         return suffix;
     }
 
+    function moveTo(e, i){
+        e.stopPropagation();
+        const ordinalSuffix = getOrdinalSuffix(i+1);
+		console.log(i);
+		const week = document.querySelector('.week-index');
+
+		week.innerHTML = `${i+1}${ordinalSuffix} week of your Life`;
+	}
 
     function openSchedule(e, i){
         const duration = e.target.title;
         const ordinalSuffix = getOrdinalSuffix(i+1);
         const schedule = `<div class="dimmed" onclick="closeSchedule()">
 							<div class="popup schedule">
-                                <h4 class="duration">${duration}</h4>
-                                <p class="week-index">${i+1}${ordinalSuffix} week of your Life</p>
+								<header>
+									<button class="prev" onclick="moveTo(event, ${i-1})"><</button>
+									<div>
+										<h3 class="duration">${duration}</h3>
+										<p class="week-index">${i+1}${ordinalSuffix} week of your Life</p>
+									</div>
+									<button class="next" onclick="moveTo(event, ${i+1})">></button>
+								</header>
+
                                 <ul>
                                     <li>Things Done 1</li>
                                     <li>Things Done 2</li>
@@ -268,15 +317,14 @@
 
         boxWrapper.innerHTML = boxes;
         document.querySelector('.paradigm').style.display = 'flex';
-        console.log(boxesData)
 
         function getDurationFormat(startDate, endDate) {
             let endYear = '';
             if(startDate.getFullYear() !== endDate.getFullYear()){
-                endYear = endDate.getFullYear() + '/'
+                endYear = endDate.getFullYear() + '.'
             }
-            return  `${startDate.getFullYear()}/${startDate.getMonth()+1}/${startDate.getDate()} `
-                   +`~ ${endYear}${endDate.getMonth()+1}/${endDate.getDate()}`;
+            return  `${startDate.getFullYear()}.${startDate.getMonth()+1}.${startDate.getDate()} `
+                   +`~ ${endYear}${endDate.getMonth()+1}.${endDate.getDate()}`;
         }
 
 
