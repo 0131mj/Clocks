@@ -218,7 +218,7 @@
 		<div class="life-text">
 			<div class="box"></div> Remain
 		</div>
-		<button class="btn" onclick="location.reload()">Refresh</button>
+		<button class="btn" onclick="location.reload()">Reset BirthDate</button>
 
 
 		<!--<p>Total Time : 100 years</p>-->
@@ -329,7 +329,7 @@
                 boxClass += ' fill'
             }
 
-            boxes += `<div class="${boxClass}" title="${durationTxt}" onclick="openSchedule(event, ${i})"></div>`;
+            boxes += `<span class="${boxClass}" title="${durationTxt}" onclick="openSchedule(event, ${i})"></span>`;
 
             const boxData = {
                 startDateOfWeek : startDateOfWeek,
