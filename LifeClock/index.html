@@ -68,6 +68,10 @@
 			animation: blinker 1.5s linear infinite;
 		}
 
+		.index{
+			display: none;
+		}
+
 
 		@keyframes blinker {
 			50% { opacity: 0; }
@@ -198,9 +202,9 @@
 <!--		<h3>Birth Date</h3>-->
 		<p>Input your Birth Date.</p>
 		<div class="input-area">
-			<input type="number" name="year"  placeholder="0000" minlength="4" maxlength="4"  min="1900" max="2018" required >
-			<input type="number" name="month" placeholder="00" minlength="1" maxlength="2"  min="1" max="12" required >
-			<input type="number" name="date"  placeholder="00" minlength="1" maxlength="2"  min="1" max="31" required >
+			<input type="number" name="year"  placeholder="0000" minlength="4" maxlength="4"  min="1900" max="2018" required  value="1982">
+			<input type="number" name="month" placeholder="00" minlength="1" maxlength="2"  min="1" max="12" required  value="1">
+			<input type="number" name="date"  placeholder="00" minlength="1" maxlength="2"  min="1" max="31" required value="31">
 			<input type="submit" id="form-submit-btn" class="btn">
 		</div>
 	</form>
@@ -245,7 +249,8 @@
 
 	document.getElementById('birth-day-form').addEventListener('submit', submitBirthDate);
 
-    function closeSchedule() {
+    function closeSchedule(event) {
+        event.preventDefault();
 		const popup = document.getElementsByClassName('dimmed');
 		popup[0].remove();
     }
@@ -270,10 +275,24 @@
 		week.innerHTML = `${i+1}${ordinalSuffix} week of your Life`;
 	}
 
-    function openSchedule(e, i){
-        const duration = e.target.title;
+    function getDurationFormat(startDate, endDate) {
+        let endYear = '';
+        if(startDate.getFullYear() !== endDate.getFullYear()){
+            endYear = endDate.getFullYear() + '.'
+        }
+        return  `${startDate.getFullYear()}.${startDate.getMonth()+1}.${startDate.getDate()} `
+            +`~ ${endYear}${endDate.getMonth()+1}.${endDate.getDate()}`;
+    }
+
+    function openSchedule(e){
+        console.log('open')
+        const i = e.target.dataset.index;
+        if(!i) return;
+        const modalData = boxesData[i];
+
+        const duration = getDurationFormat(modalData.startDateOfWeek, modalData.endDateOfWeek);
         const ordinalSuffix = getOrdinalSuffix(i+1);
-        const schedule = `<div class="dimmed" onclick="closeSchedule()">
+        const schedule = `<div class="dimmed">
 							<div class="popup schedule">
 								<header>
 									<button class="prev" onclick="moveTo(event, ${i-1})"><</button>
@@ -289,16 +308,17 @@
                                     <li>Things Done 2</li>
                                     <li>Things Done 3</li>
                                 </ul>
-								<button class="close-popup btn" onclick="closeSchedule()">Close</button>
+								<button class="close-popup btn" onclick="closeSchedule(event)">Close</button>
 							</div>
-
 						  </div>`;
         document.querySelector('body').innerHTML += schedule;
     };
 
+
     const totalBoxCount = 6000;
 
     let boxes = '';
+
     let boxesData = [...Array(totalBoxCount)];
 
 	function submitBirthDate(e) {
@@ -329,7 +349,10 @@
                 boxClass += ' fill'
             }
 
-            boxes += `<span class="${boxClass}" title="${durationTxt}" onclick="openSchedule(event, ${i})"></span>`;
+            boxes += `<span class="box" data-index="${i}"></span>`;
+            // boxes += `<span class="box"><span class="index">${i}</span></span>`;
+            // onclick="openSchedule(event, ${i})"
+
 
             const boxData = {
                 startDateOfWeek : startDateOfWeek,
@@ -339,22 +362,20 @@
             return boxData;
         });
 
-		document.getElementById('birth-day-form').style.display = 'none';
+		// document.getElementById('birth-day-form').style.display = 'none';
 		document.body.style.padding = '2rem';
 		
         boxWrapper.innerHTML = boxes;
+        boxWrapper.addEventListener('click',function (e) {
+			openSchedule(e)
+        })
+        // boxWrapper.addEventListener("click", (e) =>{openSchedule(e)});
+
         document.querySelector('.paradigm').style.display = 'flex';
 
-        function getDurationFormat(startDate, endDate) {
-            let endYear = '';
-            if(startDate.getFullYear() !== endDate.getFullYear()){
-                endYear = endDate.getFullYear() + '.'
-            }
-            return  `${startDate.getFullYear()}.${startDate.getMonth()+1}.${startDate.getDate()} `
-                   +`~ ${endYear}${endDate.getMonth()+1}.${endDate.getDate()}`;
-        }
 
 
+		// console.log(boxesData);
     }
 
 </script>
