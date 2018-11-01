@@ -239,9 +239,9 @@
 	{/*TODO : input box*/}
 	const boxWrapper = document.getElementById('box-wrapper');
 	// const currentTime = document.getElementById('current-time');
-
-	const age = 37;
-	const weekOfYear = 52;
+	//
+	// const age = 37;
+	// const weekOfYear = 52;
 
 	// boxWrapper.innerHTML = getBoxes(boxCount, filledBoxCount);
 	// currentTime.innerHTML = new Date().toISOString().slice(0,10);
@@ -250,6 +250,7 @@
 	document.getElementById('birth-day-form').addEventListener('submit', submitBirthDate);
 
     function closeSchedule(event) {
+        console.log('close');
         event.preventDefault();
 		const popup = document.getElementsByClassName('dimmed');
 		popup[0].remove();
