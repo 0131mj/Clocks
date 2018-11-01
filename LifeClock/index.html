@@ -236,26 +236,23 @@
 
 </body>
 <script>
-	{/*TODO : input box*/}
-	const boxWrapper = document.getElementById('box-wrapper');
-	// const currentTime = document.getElementById('current-time');
-	//
-	// const age = 37;
-	// const weekOfYear = 52;
 
-	// boxWrapper.innerHTML = getBoxes(boxCount, filledBoxCount);
-	// currentTime.innerHTML = new Date().toISOString().slice(0,10);
-	// currentBoxes.innerHTML = `: ${filledBoxCount}th`;
 
-	document.getElementById('birth-day-form').addEventListener('submit', submitBirthDate);
+    /**
+     * 설정
+     * */
 
-    function closeSchedule(event) {
-        console.log('close');
-        event.preventDefault();
-		const popup = document.getElementsByClassName('dimmed');
-		popup[0].remove();
-    }
+    const totalBoxCount = 6000;
 
+    /* 엘리먼트 정의 */
+    const boxWrapper = document.getElementById('box-wrapper');
+    document.getElementById('birth-day-form').addEventListener('submit', submitBirthDate);
+
+    /**
+	 * COMMON
+	 * */
+
+    /* 날짜, 기수 형식 가져오기*/
     function getOrdinalSuffix(num){
 
         let suffix = 'th';
@@ -267,15 +264,7 @@
         return suffix;
     }
 
-    function moveTo(e, i){
-        e.stopPropagation();
-        const ordinalSuffix = getOrdinalSuffix(i+1);
-		console.log(i);
-		const week = document.querySelector('.week-index');
-
-		week.innerHTML = `${i+1}${ordinalSuffix} week of your Life`;
-	}
-
+    /* 기간 형식 가져오기 */
     function getDurationFormat(startDate, endDate) {
         let endYear = '';
         if(startDate.getFullYear() !== endDate.getFullYear()){
@@ -285,6 +274,30 @@
             +`~ ${endYear}${endDate.getMonth()+1}.${endDate.getDate()}`;
     }
 
+
+    /**
+     * 팝업창 제어
+     * */
+
+    /* 팝업창 닫기 */
+    function closeSchedule(event) {
+        console.log('close');
+        event.preventDefault();
+        const popup = document.getElementsByClassName('dimmed');
+        popup[0].remove();
+    }
+
+    /* 팝업창 이동 */
+    function moveTo(e, i){
+        e.stopPropagation();
+        const ordinalSuffix = getOrdinalSuffix(i+1);
+		console.log(i);
+		const week = document.querySelector('.week-index');
+
+		week.innerHTML = `${i+1}${ordinalSuffix} week of your Life`;
+	}
+
+    /* 팝업열기  */
     function openSchedule(e){
         console.log('open')
         const i = e.target.dataset.index;
@@ -316,20 +329,22 @@
     };
 
 
-    const totalBoxCount = 6000;
+    /**
+	 * Form, 데이터 생성 부분
+	 * */
 
     let boxes = '';
-
     let boxesData = [...Array(totalBoxCount)];
 
 	function submitBirthDate(e) {
+
+	    /* 폼 전송 */
 	    e.preventDefault();
 	    const year = this.querySelector('[name=year]').value;
 	    const month = this.querySelector('[name=month]').value;
 	    const date = this.querySelector('[name=date]').value;
 
-	    // document.getElementById('birth-date').innerHTML = `${year}-${month}-${date}`;
-
+        /* 데이터 생성 */
 	    const birthDate = new Date(`${year}/${month}/${date}`);
 	    const weekDate = new Date(birthDate.getTime());
 		const today = new Date();
@@ -340,8 +355,6 @@
 
             const endDateOfWeek = new Date(weekDate.getTime());
             weekDate.setDate(weekDate.getDate()+1);
-
-            const durationTxt = getDurationFormat(startDateOfWeek, endDateOfWeek);
 
             let boxClass = 'box';
             if(startDateOfWeek < today && today <= endDateOfWeek){
@@ -354,7 +367,6 @@
             // boxes += `<span class="box"><span class="index">${i}</span></span>`;
             // onclick="openSchedule(event, ${i})"
 
-
             const boxData = {
                 startDateOfWeek : startDateOfWeek,
                 endDateOfWeek : endDateOfWeek,
@@ -364,7 +376,7 @@
         });
 
 		// document.getElementById('birth-day-form').style.display = 'none';
-		document.body.style.padding = '2rem';
+		// document.body.style.padding = '2rem';
 		
         boxWrapper.innerHTML = boxes;
         boxWrapper.addEventListener('click',function (e) {
@@ -374,10 +386,14 @@
 
         document.querySelector('.paradigm').style.display = 'flex';
 
-
-
 		// console.log(boxesData);
     }
+
+    // const currentTime = document.getElementById('current-time');
+
+    // boxWrapper.innerHTML = getBoxes(boxCount, filledBoxCount);
+    // currentTime.innerHTML = new Date().toISOString().slice(0,10);
+    // currentBoxes.innerHTML = `: ${filledBoxCount}th`;
 
 </script>
 </html>
